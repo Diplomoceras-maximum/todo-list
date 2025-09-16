@@ -1,0 +1,46 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+#app-container {
+  display: flex;
+  height: 100vh;
+}
+
+#sidebar {
+  position: relative;
+  width: 28rem;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+#sidebar.collapsed {
+  width: calc(32px + 2.4rem);
+}
+
+#sidebar.no-transition {
+  transition: none !important;
+  width: 28rem;
+}
+
+#nav-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.2rem;
+  gap: 1.2rem;
+}
+
+.small-btn {
+  height: 32px;
+  width: 32px;
+}
