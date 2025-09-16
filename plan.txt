@@ -1,0 +1,46 @@
+//////////////////////////////////////////////////
+Planning and Thinking
+//////////////////////////////////////////////////
+
+Core Features:
+1. Ability to create todo items
+2. Group todos into projects
+3. A default project is created on first load
+4. UI needs:
+    a. View all projects
+    b. View all todos in a project
+    c. Expand a todo to view/edit
+    d. Delete a todo
+    e. Mark todo as complete
+5. Persistant data storage using localStorage
+6. Application logic should be seperate from UI logic
+
+//////////////////////////////////////////////////
+Structure 
+//////////////////////////////////////////////////
+
+Project Object
+1. Name/title
+2. Colour
+3. Array of todo items
+
+Todo Object
+1. Id
+2. Title
+3. Description
+4. Due date
+5. Priority (low/medium/high)
+6. Notes (optional)
+7. Completed status (yes/no)
+
+//////////////////////////////////////////////////
+Modular Design 
+//////////////////////////////////////////////////
+
+1. todo.js | define todo items 
+2. project.js | define projects 
+3. projectManager.js | manage all projects 
+4. storage.js | save/load to/from localStorage 
+5. dom.js | displays things on screen
+6. uiController.js | ui interactions & event logic
+7. index.js | starts the app
