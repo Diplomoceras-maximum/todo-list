@@ -12,36 +12,94 @@ body {
   font-size: 1.6rem;
 }
 
+dialog[open] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+}
+
 #project-add-section {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.6rem;
+  margin: 0.8rem;
+}
+
+#project-add-section p {
+  font-size: 2rem;
+}
+
+#add-project-btn {
+  height: 32px;
+  width: 32px;
 }
 
 #app-container {
   display: grid;
   grid-template-areas: "sidebar main";
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 250px 1fr;
 }
 
 #sidebar {
-  grid-area: "sidebar";
+  grid-area: sidebar;
+}
+
+#project-list {
+  gap: 0.8rem;
 }
 
 #content {
-  grid-area: "main";
+  grid-area: main;
 }
 
 .modal form {
   display: flex;
   flex-direction: column;
+  gap: 1.6rem;
+}
+
+.modal form div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+input[type="color"] {
+  width: 100%;
 }
 
 .tab {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.8rem 1.6rem;
+  margin: 0.8rem;
+  gap: 1.6rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background 0.1s ease-in;
+  width: 100%;
+}
+
+.tab:hover {
+  background-color: gainsboro;
+}
+
+.tab h3 {
+  display: block;
+  width: 0;
+  flex-grow: 1;
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .indicator {
-  height: 32px;
-  width: 32px;
+  height: 1.6rem;
+  width: 1.6rem;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
