@@ -7,3 +7,31 @@
 html {
   font-size: 62.5%;
 }
+
+body {
+  font-size: 1.6rem;
+}
+
+#project-add-section {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+#app-container {
+  display: grid;
+  grid-template-areas: "sidebar main";
+  grid-template-columns: 1fr 4fr;
+}
+
+#sidebar {
+  grid-area: "sidebar";
+}
+
+#content {
+  grid-area: "main";
+}
+
+.hidden {
+  display: none;
+}
