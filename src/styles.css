@@ -32,6 +32,16 @@ body {
   grid-area: "main";
 }
 
-.hidden {
-  display: none;
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab {
+  display: flex;
+}
+
+.indicator {
+  height: 32px;
+  width: 32px;
 }
