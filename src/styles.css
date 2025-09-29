@@ -81,7 +81,7 @@ input[type="color"] {
   border-radius: 0.4rem;
   cursor: pointer;
   transition: background 0.1s ease-in;
-  width: 100%;
+  width: calc(100% - 1.6rem);
 }
 
 .tab:hover {

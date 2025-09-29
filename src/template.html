@@ -18,7 +18,61 @@
         <!-- Todos for the selected project -->
       </main>
       <!-- Modal for creating a todo -->
-      <dialog id="todo-modal" class="modal"></dialog>
+      <dialog id="todo-modal" class="modal">
+        <form id="new-todo-form">
+          <div>
+            <label for="todo_title">Title:</label>
+            <input
+              type="text"
+              id="todo_title"
+              class="todo-input"
+              name="todo_title"
+              placeholder="I want to..."
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_desc">Description:</label>
+            <input
+              type="text"
+              id="todo_desc"
+              class="todo-input"
+              name="todo_desc"
+              placeholder="Add note"
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_due_date">Due Date:</label>
+            <input
+              type="date"
+              id="todo_due_date"
+              class="todo-input"
+              name="todo_due_date"
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_priority">Priority:</label>
+            <select
+              name="todo_priority"
+              id="todo_priority"
+              class="todo-select"
+              required
+            >
+              <option value="low" selected>Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div>
+            <button id="confirm-todo-btn" type="button" disabled>
+              Add Todo
+            </button>
+            <button id="cancel-todo-btn" type="button">Cancel</button>
+          </div>
+        </form>
+      </dialog>
       <!-- Modal for creating a project -->
       <dialog id="project-modal" class="modal">
         <form id="new-project-form" action="">
