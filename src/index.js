@@ -15,11 +15,13 @@ const inputs = [titleInput, descInput, colourInput];
 
 // ======= Project Data =======
 const myProjects = [];
+let selectedProject = null;
 
 function Project(title, desc, colour) {
   this.title = title;
   this.desc = desc;
   this.colour = colour;
+  this.todos = [];
 }
 
 // ======= Event Listeners =======
@@ -75,6 +77,11 @@ function displayProjects(projects) {
   projects.forEach((project) => {
     const tab = document.createElement("div");
     tab.classList.add("tab");
+    tab.addEventListener("click", () => {
+      clearContent();
+      selectedProject = project;
+      displayProjectDetails(project);
+    });
 
     const colourIndicator = document.createElement("div");
     colourIndicator.classList.add("indicator");
@@ -87,4 +94,32 @@ function displayProjects(projects) {
     tab.appendChild(title);
     projectList.appendChild(tab);
   });
+}
+
+function clearContent() {
+  const content = document.querySelector("#content");
+  content.innerHTML = "";
+}
+
+function displayProjectDetails(project) {
+  const content = document.querySelector("#content");
+
+  const projectTitle = document.createElement("h1");
+  projectTitle.textContent = project.title;
+
+  const projectDescription = document.createElement("p");
+  projectDescription.textContent = project.desc;
+
+  const addTodoButton = document.createElement("button");
+  addTodoButton.textContent = "+ Add Task";
+  addTodoButton.addEventListener("click", () => {
+    //
+  });
+
+  const projectTodos = document.createElement("div");
+
+  content.appendChild(projectTitle);
+  content.appendChild(projectDescription);
+  content.appendChild(addTodoButton);
+  content.appendChild(projectTodos);
 }
