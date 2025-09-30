@@ -30,9 +30,18 @@ const todoInputs = [
   todoPriorityInput,
 ];
 
+const deleteModal = document.querySelector("#delete-confirm-modal");
+const confirmDeleteBtn = document.querySelector("#confirm-delete-btn");
+const cancelDeleteBtn = document.querySelector("#cancel-delete-btn");
+
 // ======= Data =======
 const myProjects = [];
 let selectedProject = null;
+
+let isEditingTodo = false;
+let currentEditIndex = null;
+
+let pendingDeleteIndex = null;
 
 function Project(title, desc, colour) {
   this.title = title;
@@ -46,6 +55,7 @@ function Todo(title, desc, dueDate, priority) {
   this.desc = desc;
   this.dueDate = dueDate;
   this.priority = priority;
+  this.completed = false;
 }
 
 // ======= Initialisation =======
@@ -63,6 +73,9 @@ function init() {
     input.addEventListener("input", checkTodoFormValidity)
   );
   newTodoBtn.addEventListener("click", handleAddTodo);
+
+  confirmDeleteBtn.addEventListener("click", handleConfirmDelete);
+  cancelDeleteBtn.addEventListener("click", handleCancelDelete);
 
   displayProjects(myProjects);
 }
@@ -102,15 +115,41 @@ function handleAddTodo() {
   const dueDate = todoDueDateInput.value;
   const priority = todoPriorityInput.value;
 
-  const newTodo = new Todo(title, desc, dueDate, priority);
+  if (!selectedProject) return;
 
-  if (selectedProject) {
+  if (isEditingTodo && currentEditIndex !== null) {
+    // Editing an existing todo
+    const todo = selectedProject.todos[currentEditIndex];
+    todo.title = title;
+    todo.desc = desc;
+    todo.dueDate = dueDate;
+    todo.priority = priority;
+  } else {
+    // Adding a new todo
+    const newTodo = new Todo(title, desc, dueDate, priority);
     selectedProject.todos.push(newTodo);
-    displayProjectDetails(selectedProject);
   }
 
+  displayProjectDetails(selectedProject);
   todoForm.reset();
+  newTodoBtn.textContent = "Add Todo";
+  isEditingTodo = false;
+  currentEditIndex = null;
   todoModal.close();
+}
+
+function handleConfirmDelete() {
+  if (pendingDeleteIndex !== null && selectedProject) {
+    selectedProject.todos.splice(pendingDeleteIndex, 1);
+    pendingDeleteIndex = null;
+    displayProjectDetails(selectedProject);
+  }
+  deleteModal.close();
+}
+
+function handleCancelDelete() {
+  pendingDeleteIndex = null;
+  deleteModal.close();
 }
 
 // ======= Form Validation =======
@@ -179,19 +218,27 @@ function displayProjectDetails(project) {
   addTodoButton.textContent = "+ Add Todo";
   addTodoButton.addEventListener("click", () => {
     todoForm.reset();
+    newTodoBtn.textContent = "Add Todo";
     newTodoBtn.disabled = true;
+
+    isEditingTodo = false;
+    currentEditIndex = null;
+
     todoModal.showModal();
   });
 
   const projectTodos = document.createElement("div");
   projectTodos.id = "project-todos";
 
-  project.todos.forEach((todo) => {
+  project.todos.forEach((todo, index) => {
     const todoItem = document.createElement("div");
     todoItem.classList.add("todo-item");
 
     const title = document.createElement("h3");
     title.textContent = todo.title;
+    if (todo.completed) {
+      title.style.textDecoration = "line-through";
+    }
 
     const desc = document.createElement("p");
     desc.textContent = todo.desc;
@@ -199,9 +246,33 @@ function displayProjectDetails(project) {
     const meta = document.createElement("p");
     meta.textContent = `Due: ${todo.dueDate} | Priority: ${todo.priority}`;
 
+    const completeCheckbox = document.createElement("input");
+    completeCheckbox.type = "checkbox";
+    completeCheckbox.checked = todo.completed;
+    completeCheckbox.addEventListener("change", () => {
+      todo.completed = completeCheckbox.checked;
+      displayProjectDetails(selectedProject);
+    });
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => {
+      openEditTodoModal(todo, index);
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", () => {
+      pendingDeleteIndex = index;
+      deleteModal.showModal();
+    });
+
+    todoItem.appendChild(completeCheckbox);
     todoItem.appendChild(title);
     todoItem.appendChild(desc);
     todoItem.appendChild(meta);
+    todoItem.appendChild(editBtn);
+    todoItem.appendChild(deleteBtn);
 
     projectTodos.appendChild(todoItem);
   });
@@ -210,4 +281,19 @@ function displayProjectDetails(project) {
   content.appendChild(projectDescription);
   content.appendChild(addTodoButton);
   content.appendChild(projectTodos);
+}
+
+function openEditTodoModal(todo, index) {
+  todoTitleInput.value = todo.title;
+  todoDescInput.value = todo.desc;
+  todoDueDateInput.value = todo.dueDate;
+  todoPriorityInput.value = todo.priority;
+
+  newTodoBtn.textContent = "Update Todo";
+  newTodoBtn.disabled = false;
+
+  isEditingTodo = true;
+  currentEditIndex = index;
+
+  todoModal.showModal();
 }
