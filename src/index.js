@@ -31,6 +31,7 @@ const todoInputs = [
 ];
 
 const deleteModal = document.querySelector("#delete-confirm-modal");
+const deleteModalMessage = document.querySelector("#delete-modal-message");
 const confirmDeleteBtn = document.querySelector("#confirm-delete-btn");
 const cancelDeleteBtn = document.querySelector("#cancel-delete-btn");
 
@@ -40,8 +41,11 @@ let selectedProject = null;
 
 let isEditingTodo = false;
 let currentEditIndex = null;
-
 let pendingDeleteIndex = null;
+
+let isEditingProject = false;
+let currentEditProject = null;
+let pendingDeleteProject = null;
 
 function Project(title, desc, colour) {
   this.title = title;
@@ -87,6 +91,9 @@ init();
 function handleOpenProjectModal() {
   projectForm.reset();
   newProjectBtn.disabled = true;
+  newProjectBtn.textContent = "Add Project";
+  isEditingProject = false;
+  currentEditProject = null;
   projectModal.showModal();
 }
 
@@ -95,11 +102,22 @@ function handleAddProject() {
   const desc = projectDescInput.value.trim();
   const colour = projectColourInput.value;
 
-  addProjectToList(title, desc, colour);
+  if (isEditingProject && currentEditProject) {
+    currentEditProject.title = title;
+    currentEditProject.desc = desc;
+    currentEditProject.colour = colour;
+  } else {
+    addProjectToList(title, desc, colour);
+  }
+
   displayProjects(myProjects);
+  if (selectedProject) displayProjectDetails(selectedProject);
 
   projectForm.reset();
+  newProjectBtn.textContent = "Add Project";
   newProjectBtn.disabled = true;
+  isEditingProject = false;
+  currentEditProject = null;
   projectModal.close();
 }
 
@@ -143,8 +161,20 @@ function handleConfirmDelete() {
     selectedProject.todos.splice(pendingDeleteIndex, 1);
     pendingDeleteIndex = null;
     displayProjectDetails(selectedProject);
+  } else if (pendingDeleteProject !== null) {
+    const index = myProjects.indexOf(pendingDeleteProject);
+    if (index !== -1) {
+      myProjects.splice(index, 1);
+      selectedProject = null;
+      clearContent();
+      displayProjects(myProjects);
+    }
+    pendingDeleteProject = null;
   }
   deleteModal.close();
+  deleteModalMessage.textContent = "";
+  pendingDeleteIndex = null;
+  pendingDeleteProject = null;
 }
 
 function handleCancelDelete() {
@@ -214,6 +244,25 @@ function displayProjectDetails(project) {
   const projectDescription = document.createElement("p");
   projectDescription.textContent = project.desc;
 
+  const projectActions = document.createElement("div");
+  projectActions.classList.add("project-actions");
+
+  const editProjectBtn = document.createElement("button");
+  editProjectBtn.textContent = "Edit Project";
+  editProjectBtn.addEventListener("click", () => {
+    openEditProjectModal(project);
+  });
+
+  const deleteProjectBtn = document.createElement("button");
+  deleteProjectBtn.textContent = "Delete Project";
+  deleteProjectBtn.addEventListener("click", () => {
+    pendingDeleteProject = project;
+    pendingDeleteIndex = null;
+    deleteModalMessage.textContent =
+      "Are you sure you want to delete this project?";
+    deleteModal.showModal();
+  });
+
   const addTodoButton = document.createElement("button");
   addTodoButton.textContent = "+ Add Todo";
   addTodoButton.addEventListener("click", () => {
@@ -264,6 +313,9 @@ function displayProjectDetails(project) {
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", () => {
       pendingDeleteIndex = index;
+      pendingDeleteProject = null;
+      deleteModalMessage.textContent =
+        "Are you sure you want to delete this todo?";
       deleteModal.showModal();
     });
 
@@ -277,8 +329,12 @@ function displayProjectDetails(project) {
     projectTodos.appendChild(todoItem);
   });
 
+  projectActions.appendChild(editProjectBtn);
+  projectActions.appendChild(deleteProjectBtn);
+
   content.appendChild(projectTitle);
   content.appendChild(projectDescription);
+  content.appendChild(projectActions);
   content.appendChild(addTodoButton);
   content.appendChild(projectTodos);
 }
@@ -296,4 +352,18 @@ function openEditTodoModal(todo, index) {
   currentEditIndex = index;
 
   todoModal.showModal();
+}
+
+function openEditProjectModal(project) {
+  projectTitleInput.value = project.title;
+  projectDescInput.value = project.desc;
+  projectColourInput.value = project.colour;
+
+  newProjectBtn.textContent = "Update Project";
+  newProjectBtn.disabled = false;
+
+  isEditingProject = true;
+  currentEditProject = project;
+
+  projectModal.showModal();
 }
