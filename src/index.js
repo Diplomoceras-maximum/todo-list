@@ -1,60 +1,61 @@
-import "./styles.css";
+import "./styles.css"; // Import stylesheet
 
 // ======= DOM Elements =======
 
 // Modals
-const projectModal = document.querySelector("#project-modal");
-const todoModal = document.querySelector("#todo-modal");
-const deleteModal = document.querySelector("#delete-confirm-modal");
+const projectModal = document.querySelector("#project-modal"); // Project modal
+const todoModal = document.querySelector("#todo-modal"); // Todo modal
+const deleteModal = document.querySelector("#delete-confirm-modal"); // Delete confirmation modal
 
 // Forms
-const projectForm = document.querySelector("#new-project-form");
-const todoForm = document.querySelector("#new-todo-form");
+const projectForm = document.querySelector("#new-project-form"); // Project form
+const todoForm = document.querySelector("#new-todo-form"); // Todo form
 
 // Project Form Inputs
-const projectTitleInput = document.querySelector("#project_title");
-const projectDescInput = document.querySelector("#project_desc");
-const projectColourInput = document.querySelector("#project_colour");
-const projectInputs = [projectTitleInput, projectDescInput, projectColourInput];
+const projectTitleInput = document.querySelector("#project_title"); // Project title input
+const projectDescInput = document.querySelector("#project_desc"); // Project description input
+const projectColourInput = document.querySelector("#project_colour"); // Project colour input
+const projectInputs = [projectTitleInput, projectDescInput, projectColourInput]; // Group of project inputs
 
 // Todo Form Inputs
-const todoTitleInput = document.querySelector("#todo_title");
-const todoDescInput = document.querySelector("#todo_desc");
-const todoDueDateInput = document.querySelector("#todo_due_date");
-const todoPriorityInput = document.querySelector("#todo_priority");
-const todoProjectSelect = document.querySelector("#todo_project");
+const todoTitleInput = document.querySelector("#todo_title"); // Todo title input
+const todoDescInput = document.querySelector("#todo_desc"); // Todo description input
+const todoDueDateInput = document.querySelector("#todo_due_date"); // Todo due date input
+const todoPriorityInput = document.querySelector("#todo_priority"); // Todo priority input
+const todoProjectSelect = document.querySelector("#todo_project"); // Todo project selector
 const todoInputs = [
   todoTitleInput,
   todoDescInput,
   todoDueDateInput,
   todoPriorityInput,
   todoProjectSelect,
-];
+]; // Group of todo inputs
 
 // Sidebar Tabs
-const inboxTab = document.querySelector("#inbox-tab");
-const todayTab = document.querySelector("#today-tab");
-const weekTab = document.querySelector("#week-tab");
+const inboxTab = document.querySelector("#inbox-tab"); // Inbox tab
+const todayTab = document.querySelector("#today-tab"); // Today tab
+const weekTab = document.querySelector("#week-tab"); // This Week tab
 
 // Project List
-const projectList = document.querySelector("#project-list");
+const projectList = document.querySelector("#project-list"); // Sidebar project list container
 
 // Buttons
-const newProjectBtn = document.querySelector("#confirm-project-btn");
-const cancelProjectBtn = document.querySelector("#cancel-project-btn");
-const newTodoBtn = document.querySelector("#confirm-todo-btn");
-const cancelTodoBtn = document.querySelector("#cancel-todo-btn");
-const confirmDeleteBtn = document.querySelector("#confirm-delete-btn");
-const cancelDeleteBtn = document.querySelector("#cancel-delete-btn");
+const newProjectBtn = document.querySelector("#confirm-project-btn"); // Add/Update project button
+const cancelProjectBtn = document.querySelector("#cancel-project-btn"); // Cancel project modal button
+const newTodoBtn = document.querySelector("#confirm-todo-btn"); // Add/Update todo button
+const cancelTodoBtn = document.querySelector("#cancel-todo-btn"); // Cancel todo modal button
+const confirmDeleteBtn = document.querySelector("#confirm-delete-btn"); // Confirm deletion button
+const cancelDeleteBtn = document.querySelector("#cancel-delete-btn"); // Cancel deletion button
 
 // Delete Modal Message
-const deleteModalMessage = document.querySelector("#delete-modal-message");
+const deleteModalMessage = document.querySelector("#delete-modal-message"); // Delete modal message
 
 // ======= Data =======
-let inboxProject = null;
-const myProjects = [];
-let selectedProject = null;
+let inboxProject = null; // Default "Inbox" project
+const myProjects = []; // Array to store user-created projects
+let selectedProject = null; // Current active project
 
+// Editing/Deleting state trackers
 let isEditingTodo = false;
 let currentEditIndex = null;
 let pendingDeleteIndex = null;
@@ -63,6 +64,7 @@ let isEditingProject = false;
 let currentEditProject = null;
 let pendingDeleteProject = null;
 
+// Project constructor
 function Project(title, desc, colour) {
   this.title = title;
   this.desc = desc;
@@ -70,6 +72,7 @@ function Project(title, desc, colour) {
   this.todos = [];
 }
 
+// Todo constructor
 function Todo(title, desc, dueDate, priority) {
   this.title = title;
   this.desc = desc;
@@ -120,6 +123,7 @@ function init() {
   confirmDeleteBtn.addEventListener("click", handleConfirmDelete);
   cancelDeleteBtn.addEventListener("click", handleCancelDelete);
 
+  // Add project button
   const addProjectBtn = document.querySelector("#add-project-btn");
   addProjectBtn.addEventListener("click", handleOpenProjectModal);
 
@@ -128,10 +132,11 @@ function init() {
   displayProjectDetails(selectedProject);
 }
 
-init();
+init(); // Call to start the app
 
 // ======= Event Handlers =======
 
+// Open modal to create a new project
 function handleOpenProjectModal() {
   projectForm.reset();
   newProjectBtn.disabled = true;
@@ -141,15 +146,17 @@ function handleOpenProjectModal() {
   projectModal.showModal();
 }
 
+// Add or update a project
 function handleAddProject() {
   const title = projectTitleInput.value.trim();
   const desc = projectDescInput.value.trim();
   const colour = projectColourInput.value;
 
+  // Check for duplicate titles
   const isDuplicate = myProjects.some(
     (project) =>
       project.title.toLowerCase() === title.toLowerCase() &&
-      project !== currentEditProject // Allow editing without triggering duplicate error
+      project !== currentEditProject
   );
 
   if (isDuplicate) {
@@ -157,6 +164,7 @@ function handleAddProject() {
     return;
   }
 
+  // Update if editing, otherwise add
   if (isEditingProject && currentEditProject) {
     currentEditProject.title = title;
     currentEditProject.desc = desc;
@@ -168,6 +176,7 @@ function handleAddProject() {
   displayProjects(myProjects);
   if (selectedProject) displayProjectDetails(selectedProject);
 
+  // Reset and close modal
   projectForm.reset();
   newProjectBtn.textContent = "Add Project";
   newProjectBtn.disabled = true;
@@ -176,11 +185,13 @@ function handleAddProject() {
   projectModal.close();
 }
 
+// Switch to clicked project
 function handleProjectTabClick(project) {
   selectedProject = project;
   displayProjectDetails(project);
 }
 
+// Add or update a todo item
 function handleAddTodo() {
   const title = todoTitleInput.value.trim();
   const desc = todoDescInput.value.trim();
@@ -191,8 +202,8 @@ function handleAddTodo() {
   let targetProject =
     projectIndex === -1 ? inboxProject : myProjects[projectIndex];
 
+  // Remove todo from current project
   if (isEditingTodo && currentEditIndex !== null) {
-    // Remove todo from current project
     const oldTodo = selectedProject.todos.splice(currentEditIndex, 1)[0];
 
     // Update fields
@@ -204,7 +215,7 @@ function handleAddTodo() {
     // Add to target project
     targetProject.todos.push(oldTodo);
 
-    // Do NOT switch selectedProject if moving todo between projects, just refresh the current view
+    // Do NOT switch selectedProject if moving todo between projects
     displayProjects(myProjects);
     displayProjectDetails(selectedProject);
   } else {
@@ -218,6 +229,7 @@ function handleAddTodo() {
     displayProjectDetails(selectedProject);
   }
 
+  // Reset and close modal
   todoForm.reset();
   newTodoBtn.textContent = "Add Todo";
   isEditingTodo = false;
@@ -225,6 +237,7 @@ function handleAddTodo() {
   todoModal.close();
 }
 
+// Handle delete for todo or project
 function handleConfirmDelete() {
   if (pendingDeleteIndex !== null && selectedProject) {
     selectedProject.todos.splice(pendingDeleteIndex, 1);
@@ -241,12 +254,14 @@ function handleConfirmDelete() {
     }
     pendingDeleteProject = null;
   }
+  // Reset and close modal
   deleteModal.close();
   deleteModalMessage.textContent = "";
   pendingDeleteIndex = null;
   pendingDeleteProject = null;
 }
 
+// Cancel delete and reset state
 function handleCancelDelete() {
   pendingDeleteIndex = null;
   deleteModal.close();
@@ -254,6 +269,7 @@ function handleCancelDelete() {
 
 // ======= Form Validation =======
 
+// Enable button if all project fields are filled
 function checkProjectFormValidity() {
   const isValid =
     projectTitleInput.value.trim() &&
@@ -262,6 +278,7 @@ function checkProjectFormValidity() {
   newProjectBtn.disabled = !isValid;
 }
 
+// Enable button if all todo fields are filled
 function checkTodoFormValidity() {
   const isValid =
     todoTitleInput.value.trim() &&
@@ -273,11 +290,13 @@ function checkTodoFormValidity() {
 
 // ======= Logic =======
 
+// Store and create new project
 function addProjectToList(title, desc, colour) {
   const newProject = new Project(title, desc, colour);
   myProjects.push(newProject);
 }
 
+// Render all project tabs
 function displayProjects(projects) {
   projectList.innerHTML = "";
 
@@ -287,6 +306,7 @@ function displayProjects(projects) {
   });
 }
 
+// Create project tab elements
 function createProjectTab(project) {
   const tab = document.createElement("div");
   tab.classList.add("tab");
@@ -304,11 +324,13 @@ function createProjectTab(project) {
   return tab;
 }
 
+// Clear main content area
 function clearContent() {
   const content = document.querySelector("#content");
   content.innerHTML = "";
 }
 
+// Display selected project details and its todos
 function displayProjectDetails(project) {
   clearContent();
   const content = document.querySelector("#content");
@@ -324,6 +346,7 @@ function displayProjectDetails(project) {
 
   const isInbox = project === inboxProject;
 
+  // Show edit and delete buttons if project is not the initial Inbox
   if (!isInbox) {
     const editProjectBtn = document.createElement("button");
     editProjectBtn.textContent = "Edit Project";
@@ -429,6 +452,7 @@ function displayProjectDetails(project) {
   content.appendChild(projectTodos);
 }
 
+// Pre-fill form for editing todo
 function openEditTodoModal(todo, index) {
   todoTitleInput.value = todo.title;
   todoDescInput.value = todo.desc;
@@ -451,6 +475,7 @@ function openEditTodoModal(todo, index) {
   todoModal.showModal();
 }
 
+// Pre-fill form for editing project
 function openEditProjectModal(project) {
   projectTitleInput.value = project.title;
   projectDescInput.value = project.desc;
@@ -465,6 +490,7 @@ function openEditProjectModal(project) {
   projectModal.showModal();
 }
 
+// Populate select dropdown with all projects
 function populateProjectSelect() {
   todoProjectSelect.innerHTML = "";
 
@@ -489,6 +515,7 @@ function populateProjectSelect() {
   }
 }
 
+// Display todos due today or this week
 function displaySmartView(type) {
   clearContent();
   const content = document.querySelector("#content");
@@ -497,6 +524,8 @@ function displaySmartView(type) {
   let filterFn;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const oneWeekFromNow = new Date();
   oneWeekFromNow.setDate(today.getDate() + 7);
 
