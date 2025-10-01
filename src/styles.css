@@ -28,22 +28,6 @@ dialog[open] {
   margin: 0.8rem;
 }
 
-#project h2 {
-  font-size: 2rem;
-}
-
-#project-add-section {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1.6rem;
-  margin: 0.8rem;
-}
-
-#project-add-section p {
-  font-size: 2rem;
-}
-
 #add-project-btn {
   height: 32px;
   width: 32px;
