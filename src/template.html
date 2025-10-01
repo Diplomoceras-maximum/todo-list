@@ -8,11 +8,18 @@
   <body>
     <div id="app-container">
       <aside id="sidebar">
-        <div id="project-add-section">
-          <p>Projects</p>
-          <button id="add-project-btn">+</button>
+        <div id="nav-tabs">
+          <div class="tab" id="inbox-tab">Inbox</div>
+          <div class="tab" id="today-tab">Today</div>
+          <div class="tab" id="week-tab">This Week</div>
         </div>
-        <div id="project-list"></div>
+        <div id="project-section">
+          <div id="project-header">
+            <h2>My Projects</h2>
+            <button id="add-project-btn">+</button>
+          </div>
+          <div id="project-list"></div>
+        </div>
       </aside>
       <main id="content">
         <!-- Todos for the selected project -->
@@ -64,6 +71,15 @@
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+          <div>
+            <label for="todo_project">Project:</label>
+            <select
+              name="todo_project"
+              id="todo_project"
+              class="todo-select"
+              required
+            ></select>
           </div>
           <div>
             <button id="confirm-todo-btn" type="button" disabled>

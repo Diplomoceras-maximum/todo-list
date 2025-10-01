@@ -20,6 +20,18 @@ dialog[open] {
   padding: 2rem;
 }
 
+#project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.6rem;
+  margin: 0.8rem;
+}
+
+#project h2 {
+  font-size: 2rem;
+}
+
 #project-add-section {
   display: flex;
   flex-direction: row;
@@ -102,4 +114,8 @@ input[type="color"] {
   width: 1.6rem;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.todo-item.overdue {
+  background-color: #ffe6e6;
 }
