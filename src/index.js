@@ -84,13 +84,20 @@ function Todo(title, desc, dueDate, priority) {
 // ======= Initialisation =======
 
 function init() {
-  // Create default Inbox project
-  inboxProject = new Project(
-    "Inbox",
-    "Default inbox for uncategorised tasks",
-    "#888888"
-  );
-  selectedProject = inboxProject;
+  loadFromLocalStorage();
+  // Create default Inbox project if one wasnt already created
+  if (!inboxProject) {
+    inboxProject = new Project(
+      "Inbox",
+      "Default inbox for uncategorised tasks",
+      "#888888"
+    );
+  }
+
+  // Fallback to inbox
+  if (!selectedProject) {
+    selectedProject = inboxProject;
+  }
 
   // Sidebar tab event listeners
   inboxTab.addEventListener("click", () => {
@@ -182,6 +189,7 @@ function handleAddProject() {
   newProjectBtn.disabled = true;
   isEditingProject = false;
   currentEditProject = null;
+  saveToLocalStorage();
   projectModal.close();
 }
 
@@ -234,6 +242,7 @@ function handleAddTodo() {
   newTodoBtn.textContent = "Add Todo";
   isEditingTodo = false;
   currentEditIndex = null;
+  saveToLocalStorage();
   todoModal.close();
 }
 
@@ -255,6 +264,7 @@ function handleConfirmDelete() {
     pendingDeleteProject = null;
   }
   // Reset and close modal
+  saveToLocalStorage();
   deleteModal.close();
   deleteModalMessage.textContent = "";
   pendingDeleteIndex = null;
@@ -416,6 +426,7 @@ function displayProjectDetails(project) {
       completeCheckbox.checked = todo.completed;
       completeCheckbox.addEventListener("change", () => {
         todo.completed = completeCheckbox.checked;
+        saveToLocalStorage();
         displayProjectDetails(selectedProject);
       });
 
@@ -576,4 +587,32 @@ function displaySmartView(type) {
   }
 
   content.appendChild(todosEl);
+}
+
+function saveToLocalStorage() {
+  const data = {
+    inboxProject,
+    myProjects,
+  };
+  localStorage.setItem("todoAppData", JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+  const storedData = localStorage.getItem("todoAppData");
+  if (!storedData) return;
+
+  const data = JSON.parse(storedData);
+
+  // Rehydrate inboxProject
+  inboxProject = Object.assign(new Project(), data.inboxProject);
+  inboxProject.todos = data.inboxProject.todos.map((t) =>
+    Object.assign(new Todo(), t)
+  );
+
+  // Rehydrate myProjects
+  data.myProjects.forEach((p) => {
+    const project = Object.assign(new Project(), p);
+    project.todos = p.todos.map((t) => Object.assign(new Todo(), t));
+    myProjects.push(project);
+  });
 }
