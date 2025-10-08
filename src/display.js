@@ -84,15 +84,28 @@ export function displayProjectDetails(project) {
   projectTitle.textContent = project.title;
 
   const projectDescription = document.createElement("p");
+  projectDescription.classList.add("project-desc");
   projectDescription.textContent = project.desc;
 
-  const projectActions = document.createElement("div");
-  projectActions.classList.add("project-actions");
+  const projectHeaderWrapper = document.createElement("div");
+  projectHeaderWrapper.id = "project-header-wrapper";
 
   const isInbox = project === inboxProject;
+  let menuContainer;
 
   // Show edit and delete buttons if project is not the initial Inbox
   if (!isInbox) {
+    menuContainer = document.createElement("div");
+    menuContainer.classList.add("project-menu-container");
+
+    const menuBtn = document.createElement("button");
+    menuBtn.classList.add("project-menu-btn");
+    menuBtn.innerHTML = "&#8942";
+
+    const actionsDropdown = document.createElement("div");
+    actionsDropdown.classList.add("project-actions-dropdown");
+    actionsDropdown.style.display = "none";
+
     const editProjectBtn = document.createElement("button");
     editProjectBtn.textContent = "Edit Project";
     editProjectBtn.addEventListener("click", () => {
@@ -101,6 +114,7 @@ export function displayProjectDetails(project) {
 
     const deleteProjectBtn = document.createElement("button");
     deleteProjectBtn.textContent = "Delete Project";
+    deleteProjectBtn.classList.add("delete-btn");
     deleteProjectBtn.addEventListener("click", () => {
       setPendingDeleteProject(project);
       setPendingDeleteIndex(null);
@@ -109,8 +123,25 @@ export function displayProjectDetails(project) {
       deleteModal.showModal();
     });
 
-    projectActions.appendChild(editProjectBtn);
-    projectActions.appendChild(deleteProjectBtn);
+    actionsDropdown.appendChild(editProjectBtn);
+    actionsDropdown.appendChild(deleteProjectBtn);
+
+    menuContainer.appendChild(menuBtn);
+    menuContainer.appendChild(actionsDropdown);
+
+    menuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isCurrentlyOpen = actionsDropdown.style.display !== "none";
+      closeAllDropdowns();
+      if (!isCurrentlyOpen) {
+        actionsDropdown.style.display = "flex";
+      }
+    });
+  }
+
+  projectHeaderWrapper.appendChild(projectTitle);
+  if (menuContainer) {
+    projectHeaderWrapper.appendChild(menuContainer);
   }
 
   const addTodoButton = document.createElement("button");
@@ -134,109 +165,127 @@ export function displayProjectDetails(project) {
   const isSmartView =
     project.title === "Today" || project.title === "This Week";
 
-  project.todos
-    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-    .forEach((todo, index) => {
-      const todoItem = document.createElement("div");
-      todoItem.classList.add("todo-item");
-      todoItem.setAttribute("data-todo-index", index);
+  project.todos.forEach((todo, index) => {
+    const todoItem = document.createElement("div");
+    todoItem.classList.add("todo-item");
+    todoItem.setAttribute("data-todo-index", index);
 
-      // Apply the priority class (e.g., priority-high) for CSS styling
-      todoItem.classList.add(`priority-${todo.priority.toLowerCase()}`);
+    // Apply the priority class (e.g., priority-high) for CSS styling
+    todoItem.classList.add(`priority-${todo.priority.toLowerCase()}`);
 
-      const dueDateObj = new Date(todo.dueDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+    const dueDateObj = new Date(todo.dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-      if (todo.completed) {
-        todoItem.classList.add("completed");
-      }
+    if (todo.completed) {
+      todoItem.classList.add("completed");
+    }
 
-      const priorityIndicator = document.createElement("div");
-      priorityIndicator.classList.add("priority-indicator");
+    const priorityIndicator = document.createElement("div");
+    priorityIndicator.classList.add("priority-indicator");
 
-      const completeCheckbox = document.createElement("input");
-      completeCheckbox.type = "checkbox";
-      completeCheckbox.checked = todo.completed;
-      completeCheckbox.addEventListener("change", () => {
-        todo.completed = completeCheckbox.checked;
-        saveToLocalStorage();
-        displayProjectDetails(selectedProject);
-      });
-
-      const todoContent = document.createElement("div");
-      todoContent.classList.add("todo-content");
-
-      const title = document.createElement("h3");
-      title.textContent = todo.title;
-
-      const desc = document.createElement("p");
-      desc.textContent = todo.desc;
-
-      todoContent.appendChild(title);
-      todoContent.appendChild(desc);
-
-      const metaWrapper = document.createElement("div");
-      metaWrapper.classList.add("todo-meta-wrapper");
-
-      const dateMeta = document.createElement("p");
-
-      const dateParts = todo.dueDate.split("-");
-      const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-      let dateText = `Due: ${formattedDate}`;
-
-      // Overdue text modification for clear visibility
-      if (dueDateObj < today && !todo.completed) {
-        dateText += " (OVERDUE)";
-        todoItem.classList.add("overdue");
-      }
-      dateMeta.textContent = dateText;
-      dateMeta.classList.add("date-meta");
-
-      const priorityMeta = document.createElement("p");
-      priorityMeta.classList.add("priority-text");
-      priorityMeta.textContent = `Priority: ${todo.priority}`;
-
-      metaWrapper.appendChild(dateMeta);
-      metaWrapper.appendChild(priorityMeta);
-
-      const actionContainer = document.createElement("div");
-      actionContainer.classList.add("todo-actions");
-
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "Edit";
-      editBtn.addEventListener("click", () => {
-        openEditTodoModal(todo, index);
-      });
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Delete";
-      deleteBtn.addEventListener("click", () => {
-        setPendingDeleteIndex(index);
-        setPendingDeleteProject(null);
-        deleteModalMessage.textContent =
-          "Are you sure you want to delete this todo?";
-        deleteModal.showModal();
-      });
-
-      actionContainer.appendChild(editBtn);
-      actionContainer.appendChild(deleteBtn);
-
-      todoItem.appendChild(priorityIndicator);
-      todoItem.appendChild(completeCheckbox);
-      todoItem.appendChild(todoContent);
-      todoItem.appendChild(metaWrapper);
-
-      if (!isSmartView) {
-        todoItem.appendChild(actionContainer);
-      }
-
-      projectTodos.appendChild(todoItem);
+    const completeCheckbox = document.createElement("input");
+    completeCheckbox.type = "checkbox";
+    completeCheckbox.checked = todo.completed;
+    completeCheckbox.addEventListener("change", () => {
+      todo.completed = completeCheckbox.checked;
+      saveToLocalStorage();
+      displayProjectDetails(selectedProject);
     });
 
-  content.appendChild(projectTitle);
+    const todoContent = document.createElement("div");
+    todoContent.classList.add("todo-content");
+
+    const title = document.createElement("h3");
+    title.textContent = todo.title;
+
+    const desc = document.createElement("p");
+    desc.textContent = todo.desc;
+
+    todoContent.appendChild(title);
+    todoContent.appendChild(desc);
+
+    const metaWrapper = document.createElement("div");
+    metaWrapper.classList.add("todo-meta-wrapper");
+
+    const dateMeta = document.createElement("p");
+
+    const dateParts = todo.dueDate.split("-");
+    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    let dateText = `Due: ${formattedDate}`;
+
+    // Overdue text modification for clear visibility
+    if (dueDateObj < today && !todo.completed) {
+      dateText += " (OVERDUE)";
+      todoItem.classList.add("overdue");
+    }
+    dateMeta.textContent = dateText;
+    dateMeta.classList.add("date-meta");
+
+    const priorityMeta = document.createElement("p");
+    priorityMeta.classList.add("priority-text");
+    priorityMeta.textContent = `Priority: ${todo.priority}`;
+
+    metaWrapper.appendChild(dateMeta);
+    metaWrapper.appendChild(priorityMeta);
+
+    const todoMenuContainer = document.createElement("div");
+    todoMenuContainer.classList.add("todo-menu-container");
+
+    const todoMenuBtn = document.createElement("button");
+    todoMenuBtn.classList.add("todo-menu-btn");
+    todoMenuBtn.innerHTML = "&#8942";
+
+    const todoActionsDropdown = document.createElement("div");
+    todoActionsDropdown.classList.add("todo-actions-dropdown");
+    todoActionsDropdown.style.display = "none";
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => {
+      openEditTodoModal(todo, index);
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.addEventListener("click", () => {
+      setPendingDeleteIndex(index);
+      setPendingDeleteProject(null);
+      deleteModalMessage.textContent =
+        "Are you sure you want to delete this todo?";
+      deleteModal.showModal();
+    });
+
+    todoActionsDropdown.appendChild(editBtn);
+    todoActionsDropdown.appendChild(deleteBtn);
+
+    todoMenuContainer.appendChild(todoMenuBtn);
+    todoMenuContainer.appendChild(todoActionsDropdown);
+
+    todoMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isCurrentlyOpen = todoActionsDropdown.style.display !== "none";
+      closeAllDropdowns();
+      if (!isCurrentlyOpen) {
+        todoActionsDropdown.style.display = "flex";
+      }
+    });
+
+    todoItem.appendChild(priorityIndicator);
+    todoItem.appendChild(completeCheckbox);
+    todoItem.appendChild(todoContent);
+    todoItem.appendChild(metaWrapper);
+
+    if (!isSmartView) {
+      todoItem.appendChild(todoMenuContainer);
+    }
+
+    projectTodos.appendChild(todoItem);
+  });
+
+  content.appendChild(projectHeaderWrapper);
   content.appendChild(projectDescription);
-  content.appendChild(projectActions);
 
   if (!isSmartView) {
     content.appendChild(addTodoButton);
@@ -393,4 +442,12 @@ export function setActiveTab(activeTab) {
   if (activeTab) {
     activeTab.classList.add("active");
   }
+}
+
+export function closeAllDropdowns() {
+  document
+    .querySelectorAll(".project-actions-dropdown, .todo-actions-dropdown")
+    .forEach((d) => {
+      d.style.display = "none";
+    });
 }

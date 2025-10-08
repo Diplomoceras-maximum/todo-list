@@ -147,6 +147,17 @@ function init() {
   const addProjectBtn = document.querySelector("#add-project-btn");
   addProjectBtn.addEventListener("click", handleOpenProjectModal);
 
+  // Close menus if one is already open
+  document.addEventListener("click", (e) => {
+    if (!e.target.matches(".project-menu-btn, .todo-menu-btn")) {
+      document
+        .querySelectorAll(".project-actions-dropdown, .todo-actions-dropdown")
+        .forEach((d) => {
+          d.style.display = "none";
+        });
+    }
+  });
+
   // Initial rendering
   displayProjects(myProjects);
   displayProjectDetails(selectedProject);

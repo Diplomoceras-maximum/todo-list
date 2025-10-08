@@ -118,12 +118,78 @@ dialog[open] {
   overflow-y: auto;
 }
 
-/* HEADINGS */
-#content h1 {
-  color: var(--accent-colour);
+#project-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--main-colour);
+}
+
+.project-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.project-menu-btn {
+  color: var(--accent-colour) !important;
+  background: none !important;
+  font-size: 2.4rem;
+  padding: 1rem;
+  line-height: 1;
+  border: none;
+}
+
+.project-menu-btn:hover {
+  color: var(--secondary-colour) !important;
+  background-color: var(--sidebar-colour) !important;
+}
+
+.project-actions-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  background-color: var(--content-colour) !important;
+  border: 1px solid var(--main-colour) !important;
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  min-width: 150px;
+  padding: 0.5rem 0;
+}
+
+.project-actions-dropdown button {
+  width: 100%;
+  padding: 0.8rem 1.6rem;
+  background-color: transparent !important;
+  border: none;
+  border-radius: 0;
+  color: var(--accent-colour) !important;
+  text-align: left;
+  font-weight: normal;
+}
+
+.project-actions-dropdown button:hover {
+  background-color: var(--sidebar-colour) !important;
+}
+
+.project-actions-dropdown button.delete-btn {
+  color: var(--p-high) !important;
+}
+
+.project-desc {
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--main-colour);
+}
+
+/* HEADINGS */
+#content h1 {
+  color: var(--accent-colour);
 }
 
 /* TAB STYLING */
@@ -211,12 +277,59 @@ button:disabled {
   margin-top: 2rem;
 }
 
-.todo-actions {
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
+.todo-menu-container {
+  position: relative;
   flex-shrink: 0;
 }
+
+.todo-menu-btn {
+  background: none !important;
+  color: var(--accent-colour) !important;
+  font-size: 2rem;
+  padding: 0.8rem;
+  line-height: 1rem;
+  border: none;
+}
+
+.todo-menu-btn:hover {
+  color: var(--secondary-colour) !important;
+  background-color: transparent !important;
+}
+
+.todo-actions-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  background-color: var(--content-colour);
+  border: 1px solid var(--main-colour);
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  min-width: 120px;
+  padding: 0.5rem 0;
+}
+
+.todo-actions-dropdown button {
+  width: 100%;
+  padding: 0.8rem 1.6rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--accent-colour);
+  text-align: left;
+  font-weight: normal;
+}
+
+.todo-actions-dropdown button:hover {
+  background-color: var(--sidebar-colour);
+}
+
+.todo-actions-dropdown button.delete-btn {
+  color: var(--p-high) !important;
+}
+
 .todo-item:hover .todo-actions {
   opacity: 1;
 }
