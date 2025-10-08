@@ -180,7 +180,10 @@ export function displayProjectDetails(project) {
       metaWrapper.classList.add("todo-meta-wrapper");
 
       const dateMeta = document.createElement("p");
-      let dateText = `Due: ${todo.dueDate}`;
+
+      const dateParts = todo.dueDate.split("-");
+      const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+      let dateText = `Due: ${formattedDate}`;
 
       // Overdue text modification for clear visibility
       if (dueDateObj < today && !todo.completed) {
