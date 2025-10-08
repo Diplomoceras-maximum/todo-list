@@ -130,31 +130,30 @@ export function displayProjectDetails(project) {
   const projectTodos = document.createElement("div");
   projectTodos.id = "project-todos";
 
+  // Check if the current view is a smart view (Today, This Week)
+  const isSmartView =
+    project.title === "Today" || project.title === "This Week";
+
   project.todos
     .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
     .forEach((todo, index) => {
       const todoItem = document.createElement("div");
       todoItem.classList.add("todo-item");
+      todoItem.setAttribute("data-todo-index", index);
 
-      const title = document.createElement("h3");
-      title.textContent = todo.title;
-      if (todo.completed) {
-        title.style.textDecoration = "line-through";
-      }
-
-      const desc = document.createElement("p");
-      desc.textContent = todo.desc;
-
-      const meta = document.createElement("p");
-      meta.textContent = `Due: ${todo.dueDate} | Priority: ${todo.priority}`;
+      // Apply the priority class (e.g., priority-high) for CSS styling
+      todoItem.classList.add(`priority-${todo.priority.toLowerCase()}`);
 
       const dueDateObj = new Date(todo.dueDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      if (dueDateObj < today && !todo.completed) {
-        todoItem.classList.add("overdue");
+      if (todo.completed) {
+        todoItem.classList.add("completed");
       }
+
+      const priorityIndicator = document.createElement("div");
+      priorityIndicator.classList.add("priority-indicator");
 
       const completeCheckbox = document.createElement("input");
       completeCheckbox.type = "checkbox";
@@ -164,6 +163,42 @@ export function displayProjectDetails(project) {
         saveToLocalStorage();
         displayProjectDetails(selectedProject);
       });
+
+      const todoContent = document.createElement("div");
+      todoContent.classList.add("todo-content");
+
+      const title = document.createElement("h3");
+      title.textContent = todo.title;
+
+      const desc = document.createElement("p");
+      desc.textContent = todo.desc;
+
+      todoContent.appendChild(title);
+      todoContent.appendChild(desc);
+
+      const metaWrapper = document.createElement("div");
+      metaWrapper.classList.add("todo-meta-wrapper");
+
+      const dateMeta = document.createElement("p");
+      let dateText = `Due: ${todo.dueDate}`;
+
+      // Overdue text modification for clear visibility
+      if (dueDateObj < today && !todo.completed) {
+        dateText += " (OVERDUE)";
+        todoItem.classList.add("overdue");
+      }
+      dateMeta.textContent = dateText;
+      dateMeta.classList.add("date-meta");
+
+      const priorityMeta = document.createElement("p");
+      priorityMeta.classList.add("priority-text");
+      priorityMeta.textContent = `Priority: ${todo.priority}`;
+
+      metaWrapper.appendChild(dateMeta);
+      metaWrapper.appendChild(priorityMeta);
+
+      const actionContainer = document.createElement("div");
+      actionContainer.classList.add("todo-actions");
 
       const editBtn = document.createElement("button");
       editBtn.textContent = "Edit";
@@ -181,12 +216,17 @@ export function displayProjectDetails(project) {
         deleteModal.showModal();
       });
 
+      actionContainer.appendChild(editBtn);
+      actionContainer.appendChild(deleteBtn);
+
+      todoItem.appendChild(priorityIndicator);
       todoItem.appendChild(completeCheckbox);
-      todoItem.appendChild(title);
-      todoItem.appendChild(desc);
-      todoItem.appendChild(meta);
-      todoItem.appendChild(editBtn);
-      todoItem.appendChild(deleteBtn);
+      todoItem.appendChild(todoContent);
+      todoItem.appendChild(metaWrapper);
+
+      if (!isSmartView) {
+        todoItem.appendChild(actionContainer);
+      }
 
       projectTodos.appendChild(todoItem);
     });
@@ -194,7 +234,11 @@ export function displayProjectDetails(project) {
   content.appendChild(projectTitle);
   content.appendChild(projectDescription);
   content.appendChild(projectActions);
-  content.appendChild(addTodoButton);
+
+  if (!isSmartView) {
+    content.appendChild(addTodoButton);
+  }
+
   content.appendChild(projectTodos);
 }
 

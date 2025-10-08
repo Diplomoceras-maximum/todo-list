@@ -1,3 +1,16 @@
+:root {
+  --sidebar-colour: #0d1b2a;
+  --content-colour: #1b263b;
+  --main-colour: #415a77;
+  --secondary-colour: #778da9;
+  --accent-colour: #e0e1dd;
+
+  /* Priority Colors */
+  --p-high: #ff6347;
+  --p-medium: #ffcc00;
+  --p-low: #32cd32;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,10 +19,23 @@
 
 html {
   font-size: 62.5%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
   font-size: 1.6rem;
+  background-color: var(--sidebar-colour);
+  color: var(--accent-colour);
+  overflow: hidden;
+}
+
+/* Modals/Dialogs */
+dialog {
+  background-color: var(--content-colour);
+  color: var(--accent-colour);
+  border: 1px solid var(--main-colour);
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 dialog[open] {
@@ -17,56 +43,90 @@ dialog[open] {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 2rem;
-}
-
-#project-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 1.6rem;
-  margin: 0.8rem;
-}
-
-#add-project-btn {
-  height: 32px;
-  width: 32px;
-}
-
-#app-container {
-  display: grid;
-  grid-template-areas: "sidebar main";
-  grid-template-columns: 250px 1fr;
-}
-
-#sidebar {
-  grid-area: sidebar;
-}
-
-#project-list {
-  gap: 0.8rem;
-}
-
-#content {
-  grid-area: main;
+  padding: 3rem;
+  width: 40rem;
 }
 
 .modal form {
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  padding: 1.6rem;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .modal form div {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
-
-input[type="color"] {
   width: 100%;
 }
 
+.modal form label {
+  font-weight: bold;
+}
+
+.modal form input:not([type="color"]),
+.modal form textarea,
+.modal form select {
+  background-color: var(--sidebar-colour);
+  border: 1px solid var(--main-colour);
+  color: var(--accent-colour);
+  padding: 0.8rem;
+  border-radius: 0.4rem;
+}
+
+.modal form input[type="color"] {
+  width: 100%;
+  background-color: var(--sidebar-colour);
+  border: 1px solid var(--main-colour);
+  color: var(--accent-colour);
+  height: 3.5rem;
+  border-radius: 0.4rem;
+}
+
+/* LAYOUT */
+#app-container {
+  display: grid;
+  grid-template-areas: "sidebar main";
+  grid-template-columns: 250px 1fr;
+  height: 100vh;
+}
+
+#sidebar {
+  grid-area: sidebar;
+  background-color: var(--sidebar-colour);
+  overflow-y: auto;
+}
+
+#nav-tabs {
+  margin-top: 3rem;
+}
+
+#project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 3rem;
+}
+
+#content {
+  grid-area: main;
+  background-color: var(--content-colour);
+  padding: 3rem;
+  overflow-y: auto;
+}
+
+/* HEADINGS */
+#content h1 {
+  color: var(--accent-colour);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--main-colour);
+}
+
+/* TAB STYLING */
 .tab {
   display: flex;
   flex-direction: row;
@@ -76,50 +136,208 @@ input[type="color"] {
   gap: 1.6rem;
   border-radius: 0.4rem;
   cursor: pointer;
-  transition: background 0.1s ease-in;
+  transition: background 0.1s ease-in, color 0.1s ease-in;
   width: calc(100% - 1.6rem);
+  color: var(--accent-colour);
 }
 
 .tab:hover {
-  background-color: gainsboro;
+  background-color: var(--content-colour);
+  color: var(--secondary-colour);
 }
 
 .tab.active {
-  background-color: #e0f0ff;
-  color: #007bff;
+  background-color: var(--content-colour);
+  color: var(--secondary-colour);
+  border-left: 4px solid var(--secondary-colour);
 }
 
-.tab.active h3 {
-  color: inherit;
-}
-
+/* Icon & Title color inheritance */
 .tab-icon {
   width: 24px;
   height: 24px;
-}
-
-.tab-icon svg {
-  width: 100%;
-  height: 100%;
+  color: inherit;
 }
 
 .tab h3 {
-  display: block;
-  width: 0;
-  flex-grow: 1;
-  word-break: normal;
-  overflow-wrap: break-word;
-  white-space: normal;
+  color: inherit;
 }
 
+/* Indicator for Custom Projects */
 .indicator {
   height: 24px;
   width: 24px;
-  border-radius: 4px;
+  border-radius: 0;
   border: none;
   flex-shrink: 0;
 }
 
-.todo-item.overdue {
-  background-color: #ffe6e6;
+/* BUTTONS */
+button {
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 0.4rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+button:not(.delete-btn) {
+  background-color: var(--secondary-colour);
+  color: var(--sidebar-colour);
+}
+
+button:not(.delete-btn):hover {
+  background-color: #6a7c93;
+}
+
+button:disabled {
+  background-color: var(--main-colour);
+  color: var(--sidebar-colour);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: var(--p-high);
+  color: var(--accent-colour);
+}
+
+/* TODO ITEM STYLING */
+#project-todos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.todo-item:hover {
+  background-color: #263548;
+}
+
+.todo-item {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.5rem;
+  border-radius: 0.4rem;
+  background-color: #2c3e50;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.todo-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-meta-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 1.4rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.todo-item h3 {
+  color: var(--accent-colour);
+  margin: 0 0 0.5rem 0;
+}
+.todo-item p {
+  color: var(--accent-colour);
+}
+
+/* PRIORITY STYLING */
+.priority-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0.5rem;
+  background-color: var(--main-colour);
+  border-bottom-left-radius: 0.4rem;
+  border-top-left-radius: 0.4rem;
+}
+
+.todo-item.priority-high .priority-indicator {
+  background-color: var(--p-high) !important;
+}
+
+.todo-item.priority-high .priority-text {
+  color: var(--p-high) !important;
+  font-weight: bold !important;
+}
+
+.todo-item.priority-medium .priority-indicator {
+  background-color: var(--p-medium) !important;
+}
+
+.todo-item.priority-medium .priority-text {
+  color: var(--p-medium) !important;
+}
+
+.todo-item.priority-low .priority-indicator {
+  background-color: var(--p-low) !important;
+}
+
+.todo-item.priority-low .priority-text {
+  color: var(--p-low) !important;
+}
+
+/* COMPLETION STYLING */
+
+/* Styling for completed todo item (gray out and strikethrough) */
+.todo-item.completed {
+  background-color: #263548;
+  opacity: 0.7;
+}
+
+/* Apply line-through and light color to all text inside */
+.todo-item.completed h3,
+.todo-item.completed p {
+  color: var(--main-colour) !important;
+  text-decoration: line-through !important;
+}
+
+.todo-item.completed .priority-text {
+  color: var(--main-colour) !important;
+  text-decoration: line-through !important;
+}
+
+.todo-item.completed .priority-indicator {
+  background-color: var(--main-colour) !important;
+}
+
+.todo-item.completed input[type="checkbox"] {
+  text-decoration: none;
+  opacity: 1;
+}
+
+/* OVERDUE STYLING (Not Completed) */
+.todo-item.overdue:not(.completed) {
+  background-color: #3b506b;
+}
+
+.todo-item.overdue:not(.completed) h3,
+.todo-item.overdue:not(.completed) p {
+  color: var(--accent-colour);
+}
+
+.todo-item.overdue:not(.completed) p.date-meta {
+  color: var(--p-high) !important;
+  font-weight: bold !important;
 }
