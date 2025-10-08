@@ -123,8 +123,8 @@ dialog[open] {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--main-colour);
+  min-height: 5rem;
 }
 
 .project-menu-container {
@@ -286,14 +286,14 @@ button:disabled {
   background: none !important;
   color: var(--accent-colour) !important;
   font-size: 2rem;
-  padding: 0.8rem;
+  padding: 1.2rem 0.8rem;
   line-height: 1rem;
   border: none;
 }
 
 .todo-menu-btn:hover {
   color: var(--secondary-colour) !important;
-  background-color: transparent !important;
+  background-color: var(--sidebar-colour) !important;
 }
 
 .todo-actions-dropdown {
