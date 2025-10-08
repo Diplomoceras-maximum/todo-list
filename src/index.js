@@ -184,6 +184,7 @@ function init() {
   // Initial rendering
   displayProjects(myProjects);
   displayProjectDetails(selectedProject);
+  setActiveTab(inboxTab);
 }
 
 init(); // Call to start the app

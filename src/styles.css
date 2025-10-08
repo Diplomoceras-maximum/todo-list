@@ -4,6 +4,11 @@
   --main-colour: #415a77;
   --secondary-colour: #778da9;
   --accent-colour: #e0e1dd;
+  --completed-grey-colour: #263548;
+  --todo-background-colour: #2c3e50;
+  --todo-hover-colour: #263548;
+  --overdue-todo-colour: #230007;
+  --button-hover-colour: #6a7c93;
 
   /* Priority Colors */
   --p-high: #ff6347;
@@ -136,7 +141,7 @@ dialog[open] {
 }
 
 #menu-btn:hover {
-  background-color: #6a7c93 !important;
+  background-color: var(--button-hover-colour) !important;
 }
 #menu-btn svg {
   height: 32px;
@@ -313,7 +318,7 @@ button:not(.delete-btn) {
 }
 
 button:not(.delete-btn):hover {
-  background-color: #6a7c93;
+  background-color: var(--button-hover-colour);
 }
 
 button:disabled {
@@ -394,7 +399,7 @@ button:disabled {
 }
 
 .todo-item:hover {
-  background-color: #263548;
+  background-color: var(--completed-grey-colour);
 }
 
 .todo-item {
@@ -406,7 +411,7 @@ button:disabled {
   gap: 1.2rem;
   padding: 1.5rem;
   border-radius: 0.4rem;
-  background-color: #2c3e50;
+  background-color: var(--todo-background-colour);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -470,11 +475,15 @@ button:disabled {
   color: var(--p-low) !important;
 }
 
+.clickable-smart-view-todo {
+  cursor: pointer;
+}
+
 /* COMPLETION STYLING */
 
 /* Styling for completed todo item (gray out and strikethrough) */
 .todo-item.completed {
-  background-color: #263548;
+  background-color: var(--completed-grey-colour);
   opacity: 0.7;
 }
 
@@ -501,7 +510,7 @@ button:disabled {
 
 /* OVERDUE STYLING (Not Completed) */
 .todo-item.overdue:not(.completed) {
-  background-color: #3b506b;
+  background-color: var(--overdue-todo-colour);
 }
 
 .todo-item.overdue:not(.completed) h3,
