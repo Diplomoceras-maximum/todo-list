@@ -43,6 +43,7 @@ import {
   setActiveTab,
 } from "./display.js";
 import { saveToLocalStorage } from "./storage.js";
+import { closeSidebar } from "./index.js";
 
 // Open modal to create a new project
 export function handleOpenProjectModal() {
@@ -99,6 +100,7 @@ export function handleProjectTabClick(project, tabElement) {
   setSelectedProject(project);
   displayProjectDetails(project);
   setActiveTab(tabElement);
+  closeSidebar();
 }
 
 // Add or update a todo item

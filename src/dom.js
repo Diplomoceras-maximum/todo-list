@@ -1,3 +1,10 @@
+// App Containers
+export const appContainer = document.querySelector("#app-container");
+export const sidebar = document.querySelector("#sidebar");
+
+// Mobile Menu Button
+export const menuBtn = document.querySelector("#menu-btn");
+
 // Modals
 export const projectModal = document.querySelector("#project-modal"); // Project modal
 export const todoModal = document.querySelector("#todo-modal"); // Todo modal

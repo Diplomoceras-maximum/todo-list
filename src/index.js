@@ -40,6 +40,8 @@ import {
   cancelDeleteBtn,
   todoModal,
   projectModal,
+  appContainer,
+  menuBtn,
 } from "./dom.js";
 
 const SVG_INBOX = `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -88,6 +90,11 @@ function setTabContent(tabElement, svgCode, titleText) {
 
   tabElement.appendChild(iconWrapper);
   tabElement.appendChild(title);
+}
+
+export function closeSidebar() {
+  const appContainer = document.querySelector("#app-container");
+  appContainer.classList.remove("sidebar-open");
 }
 
 function init() {
@@ -149,6 +156,7 @@ function init() {
 
   // Close menus if one is already open
   document.addEventListener("click", (e) => {
+    // Logic to close dropdown menus
     if (!e.target.matches(".project-menu-btn, .todo-menu-btn")) {
       document
         .querySelectorAll(".project-actions-dropdown, .todo-actions-dropdown")
@@ -156,7 +164,22 @@ function init() {
           d.style.display = "none";
         });
     }
+
+    // Logic to close the Sidebar
+    const isSidebarOpen = appContainer.classList.contains("sidebar-open");
+    const isClickInsideSidebar = sidebar.contains(e.target);
+    const isClickOnMenuButton =
+      menuBtn.contains(e.target) || e.target === menuBtn;
+
+    if (isSidebarOpen && !isClickInsideSidebar && !isClickOnMenuButton) {
+      appContainer.classList.remove("sidebar-open");
+    }
   });
+
+  function toggleSidebar() {
+    appContainer.classList.toggle("sidebar-open");
+  }
+  menuBtn.addEventListener("click", toggleSidebar);
 
   // Initial rendering
   displayProjects(myProjects);
