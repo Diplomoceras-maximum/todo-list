@@ -40,6 +40,7 @@ import {
   displayProjectDetails,
   addProjectToList,
   clearContent,
+  setActiveTab,
 } from "./display.js";
 import { saveToLocalStorage } from "./storage.js";
 
@@ -94,9 +95,10 @@ export function handleAddProject() {
 }
 
 // Switch to clicked project
-export function handleProjectTabClick(project) {
+export function handleProjectTabClick(project, tabElement) {
   setSelectedProject(project);
   displayProjectDetails(project);
+  setActiveTab(tabElement);
 }
 
 // Add or update a todo item

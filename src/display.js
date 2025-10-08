@@ -15,6 +15,9 @@ import {
   todoDueDateInput,
   todoPriorityInput,
   todoProjectSelect,
+  inboxTab,
+  todayTab,
+  weekTab,
 } from "./dom.js";
 import {
   Project,
@@ -51,7 +54,8 @@ export function displayProjects(projects) {
 export function createProjectTab(project) {
   const tab = document.createElement("div");
   tab.classList.add("tab");
-  tab.addEventListener("click", () => handleProjectTabClick(project));
+  tab.setAttribute("data-project-title", project.title);
+  tab.addEventListener("click", () => handleProjectTabClick(project, tab));
 
   const colourIndicator = document.createElement("div");
   colourIndicator.classList.add("indicator");
@@ -324,4 +328,22 @@ export function displaySmartView(type) {
   }
 
   content.appendChild(todosEl);
+}
+
+// Function to manage the active state of sidebar tabs
+export function setActiveTab(activeTab) {
+  const allTabs = [
+    inboxTab,
+    todayTab,
+    weekTab,
+    ...Array.from(projectList.children),
+  ];
+
+  allTabs.forEach((tab) => {
+    tab.classList.remove("active");
+  });
+
+  if (activeTab) {
+    activeTab.classList.add("active");
+  }
 }
