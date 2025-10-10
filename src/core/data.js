@@ -16,6 +16,12 @@ export function Todo(title, desc, dueDate, priority, projectTitle) {
   this.projectTitle = projectTitle;
 }
 
+// Store and create new project
+export function addProjectToList(title, desc, colour) {
+  const newProject = new Project(title, desc, colour);
+  myProjects.push(newProject);
+}
+
 // --- State variables ---
 
 export let inboxProject = null; // Default "Inbox" project

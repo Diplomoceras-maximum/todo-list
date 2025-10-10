@@ -4,7 +4,7 @@ import {
   Project,
   Todo,
   inboxProject,
-} from "./data.js";
+} from "../core/data.js";
 
 export function saveToLocalStorage() {
   const data = {

@@ -6,8 +6,8 @@ import {
   selectedProject,
   Project,
   setSelectedProject,
-} from "./data.js";
-import { loadFromLocalStorage } from "./storage.js";
+} from "./core/data.js";
+import { loadFromLocalStorage } from "./utility/storage.js";
 import {
   displayProjects,
   displayProjectDetails,
@@ -17,7 +17,7 @@ import {
 import {
   checkProjectFormValidity,
   checkTodoFormValidity,
-} from "./validation.js";
+} from "./utility/validation.js";
 import {
   handleAddProject,
   handleAddTodo,
@@ -42,7 +42,7 @@ import {
   projectModal,
   appContainer,
   menuBtn,
-} from "./dom.js";
+} from "./dom/dom.js";
 
 const SVG_INBOX = `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none">
 <title>ionicons-v5-i</title>

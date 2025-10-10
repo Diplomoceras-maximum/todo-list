@@ -15,8 +15,10 @@ import {
   todoDescInput,
   todoDueDateInput,
   todoPriorityInput,
-} from "./dom.js";
+  inboxTab,
+} from "./dom/dom.js";
 import {
+  addProjectToList,
   myProjects,
   selectedProject,
   inboxProject,
@@ -34,15 +36,14 @@ import {
   setIsEditingTodo,
   setPendingDeleteIndex,
   setPendingDeleteProject,
-} from "./data.js";
+} from "./core/data.js";
 import {
   displayProjects,
   displayProjectDetails,
-  addProjectToList,
   clearContent,
   setActiveTab,
 } from "./display.js";
-import { saveToLocalStorage } from "./storage.js";
+import { saveToLocalStorage } from "./utility/storage.js";
 import { closeSidebar } from "./index.js";
 
 // Open modal to create a new project
@@ -167,12 +168,13 @@ export function handleConfirmDelete() {
     if (index !== -1) {
       myProjects.splice(index, 1);
 
-      const newSelectedProject = myProjects[0] || inboxProject;
-      setSelectedProject(newSelectedProject);
+      setSelectedProject(inboxProject);
 
       clearContent();
       displayProjects(myProjects);
-      if (selectedProject) displayProjectDetails(selectedProject);
+      displayProjectDetails(selectedProject);
+
+      setActiveTab(inboxTab);
     }
     setPendingDeleteProject(null);
   }

@@ -8,7 +8,7 @@ import {
   todoDueDateInput,
   todoPriorityInput,
   newTodoBtn,
-} from "./dom.js";
+} from "../dom/dom.js";
 
 // Enable button if all project fields are filled
 export function checkProjectFormValidity() {
