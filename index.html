@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+  <script defer src="main.js"></script></head>
+  <body>
+    <div id="app-container">
+      <aside id="sidebar">
+        <div id="nav-tabs">
+          <div class="tab" id="inbox-tab">Inbox</div>
+          <div class="tab" id="today-tab">Today</div>
+          <div class="tab" id="week-tab">This week</div>
+        </div>
+        <div id="project-section">
+          <div id="project-header">
+            <h2>My Projects</h2>
+            <button id="add-project-btn">+</button>
+          </div>
+          <div id="project-list"></div>
+        </div>
+      </aside>
+      <main id="content">
+        <!-- Todos for the selected project -->
+      </main>
+      <!-- Modal for creating a todo -->
+      <dialog id="todo-modal" class="modal">
+        <form id="new-todo-form">
+          <div>
+            <label for="todo_title">Title:</label>
+            <input
+              type="text"
+              id="todo_title"
+              class="todo-input"
+              name="todo_title"
+              placeholder="I want to..."
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_desc">Description:</label>
+            <input
+              type="text"
+              id="todo_desc"
+              class="todo-input"
+              name="todo_desc"
+              placeholder="Add note"
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_due_date">Due Date:</label>
+            <input
+              type="date"
+              id="todo_due_date"
+              class="todo-input"
+              name="todo_due_date"
+              required
+            />
+          </div>
+          <div>
+            <label for="todo_priority">Priority:</label>
+            <select
+              name="todo_priority"
+              id="todo_priority"
+              class="todo-select"
+              required
+            >
+              <option value="low" selected>Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div>
+            <label for="todo_project">Project:</label>
+            <select
+              name="todo_project"
+              id="todo_project"
+              class="todo-select"
+              required
+            ></select>
+          </div>
+          <div>
+            <button id="confirm-todo-btn" type="button" disabled>
+              Add Todo
+            </button>
+            <button id="cancel-todo-btn" type="button">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+      <!-- Modal for creating a project -->
+      <dialog id="project-modal" class="modal">
+        <form id="new-project-form">
+          <div>
+            <label for="project_title">Title:</label>
+            <input
+              type="text"
+              id="project_title"
+              class="project-input"
+              name="project_title"
+              placeholder="I want to..."
+              required
+            />
+          </div>
+          <div>
+            <label for="project_desc">Description:</label>
+            <input
+              type="text"
+              id="project_desc"
+              class="project-input"
+              name="project_desc"
+              placeholder="Add note"
+              required
+            />
+          </div>
+          <div>
+            <label for="project_colour">Colour:</label>
+            <input
+              type="color"
+              name="project_colour"
+              id="project_colour"
+              class="project-input"
+              required
+            />
+          </div>
+          <div>
+            <button id="confirm-project-btn" type="button" disabled>
+              Add Project
+            </button>
+            <button id="cancel-project-btn" type="button">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="delete-confirm-modal">
+        <p id="delete-modal-message">Are you sure you want to delete this?</p>
+        <div id="delete-modal-buttons">
+          <button id="confirm-delete-btn">Yes</button>
+          <button id="cancel-delete-btn">No</button>
+        </div>
+      </dialog>
+    </div>
+    <button id="menu-btn">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M3 6.00092H21M3 12.0009H21M3 18.0009H21"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </body>
+</html>
